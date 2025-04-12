@@ -1,0 +1,141 @@
+package project.library.RESTController;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import project.library.entities.*;
+import project.library.service.BookService;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/library")
+public class BookController {
+
+	private static final Logger logger = LoggerFactory.getLogger(BookController.class);
+
+	@Autowired
+	private BookService bookService;
+
+	// Retrieve all books
+	// all has permisssion
+	@GetMapping("/showbooks")
+	public ResponseEntity<List<Book>> getAllBooks() {
+		logger.info("Fetching all books...");
+		List<Book> books = bookService.getAllBooks();
+		return books.isEmpty() ? ResponseEntity.status(HttpStatus.NO_CONTENT).body(books) : ResponseEntity.ok(books);
+	}
+
+	// Retrieve book by ID
+	// all has permission
+	@GetMapping("/book/{id}")
+	public ResponseEntity<?> getBookById(@PathVariable int id) {
+		logger.info("Fetching book with ID: {}", id);
+		Book book = bookService.getBookById(id);
+		return book != null ? ResponseEntity.ok(book)
+				: ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book not found");
+	}
+
+	// Add a new book
+	// manager and admin have permission
+	@PostMapping("/add")
+	public ResponseEntity<?> addBooks(@RequestBody List<Book> books) {
+		logger.info("Adding a new book...");
+		List<Book> addedBooks = bookService.addBooks(books);
+		return addedBooks != null ? ResponseEntity.status(HttpStatus.CREATED).body(addedBooks)
+				: ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add books");
+	}
+
+	// Update book details
+	// manager and admin have permission
+	@PutMapping("/update/{id}")
+	public ResponseEntity<?> updateBook(@PathVariable int id, @RequestBody Book book) {
+		logger.info("Updating book with ID: {}", id);
+		Book updatedBook = bookService.updateBook(id, book);
+		return updatedBook != null ? ResponseEntity.ok(updatedBook)
+				: ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to update book");
+	}
+
+	// Delete a book
+	// only admin has permission
+	@DeleteMapping("/delete/{id}")
+	public ResponseEntity<String> deleteBook(@PathVariable int id) {
+		logger.info("Deleting book with ID: {}", id);
+		boolean deleted = bookService.deleteBook(id);
+		return deleted ? ResponseEntity.ok("Book successfully deleted")
+				: ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book not found");
+	}
+
+	// Borrow a book
+	// manager and admin have permission
+	@PostMapping("/borrow")
+	public ResponseEntity<?> borrowBook(@RequestParam int bookId, @RequestParam int userId) {
+		logger.info("User {} borrowing book {}", userId, bookId);
+		Borrowed_books borrowedBook = bookService.borrowBook(bookId, userId);
+		return borrowedBook != null ? ResponseEntity.ok(borrowedBook)
+				: ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to borrow book");
+	}
+
+	// Renew a borrowed book
+	// manager and admin have permission
+	@PutMapping("/renew")
+	public ResponseEntity<?> renewBook(@RequestParam int borrowedBookId, @RequestParam int userId) {
+		logger.info("User {} renewing book {}", userId, borrowedBookId);
+		Borrowed_books renewedBook = bookService.renewBook(borrowedBookId, userId);
+		return renewedBook != null ? ResponseEntity.ok(renewedBook)
+				: ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to renew book");
+	}
+
+	// Return a borrowed book
+	// manager and admin have permission
+	@PostMapping("/return/{borrowedBookId}")
+	public ResponseEntity<?> returnBook(@PathVariable int borrowedBookId) {
+		logger.info("Returning borrowed book with ID: {}", borrowedBookId);
+		Returned_books returnedBook = bookService.returnBook(borrowedBookId);
+		return returnedBook != null ? ResponseEntity.ok(returnedBook)
+				: ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to return book");
+	}
+
+	// Get all borrowed books
+	// manager and admin have permission
+	@GetMapping("/borrowed")
+	public ResponseEntity<List<Borrowed_books>> getAllBorrowedBooks() {
+		logger.info("Fetching all borrowed books...");
+		List<Borrowed_books> borrowedBooks = bookService.getAllBorrowedBooks();
+		return borrowedBooks.isEmpty() ? ResponseEntity.status(HttpStatus.NO_CONTENT).body(borrowedBooks)
+				: ResponseEntity.ok(borrowedBooks);
+	}
+
+	// Get all returned books
+	// manager and admin have permission
+	@GetMapping("/returned")
+	public ResponseEntity<List<Returned_books>> getAllReturnedBooks() {
+		logger.info("Fetching all returned books...");
+		List<Returned_books> returnedBooks = bookService.getAllReturnedBooks();
+		return returnedBooks.isEmpty() ? ResponseEntity.status(HttpStatus.NO_CONTENT).body(returnedBooks)
+				: ResponseEntity.ok(returnedBooks);
+	}
+
+	// Get borrowed books for a specific user
+	// all have permission
+	@GetMapping("/borrowed/user/{userId}")
+	public ResponseEntity<List<Borrowed_books>> getBorrowedBooksByUser(@PathVariable int userId) {
+		logger.info("Fetching borrowed books for user ID: {}", userId);
+		List<Borrowed_books> borrowedBooks = bookService.getBorrowedBooksByUser(userId);
+		return borrowedBooks.isEmpty() ? ResponseEntity.status(HttpStatus.NO_CONTENT).body(borrowedBooks)
+				: ResponseEntity.ok(borrowedBooks);
+	}
+
+	// Get returned books for a specific user
+	// all have permission
+	@GetMapping("/returned/user/{userId}")
+	public ResponseEntity<List<Returned_books>> getReturnedBooksByUser(@PathVariable int userId) {
+		logger.info("Fetching returned books for user ID: {}", userId);
+		List<Returned_books> returnedBooks = bookService.getReturnedBooksByUser(userId);
+		return returnedBooks.isEmpty() ? ResponseEntity.status(HttpStatus.NO_CONTENT).body(returnedBooks)
+				: ResponseEntity.ok(returnedBooks);
+	}
+}

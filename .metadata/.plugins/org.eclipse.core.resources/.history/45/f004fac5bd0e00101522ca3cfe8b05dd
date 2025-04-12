@@ -1,0 +1,46 @@
+# Application Name
+spring.application.name=library
+
+# Datasource Configuration (MySQL)
+spring.datasource.url=jdbc:mysql://localhost:3306/library
+spring.datasource.username=root
+spring.datasource.password=
+
+# Hibernate Configuration
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=false  # Changed from true to false
+spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
+
+# Disable sequence validation (for MySQL)
+spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults=false
+
+# Logging Configuration
+logging.level.root=warn
+logging.level.org.springframework=INFO
+logging.level.project.library=DEBUG
+
+# Disable Hibernate SQL logging completely
+logging.level.org.hibernate.SQL=OFF
+logging.level.org.hibernate.type.descriptor.sql.BasicBinder=OFF
+
+# Security logging (keep at DEBUG for security troubleshooting)
+logging.level.org.springframework.security=DEBUG
+logging.level.org.springframework.web=DEBUG
+
+# Disable the Spring Boot banner
+spring.main.banner-mode=off
+
+# Disable open-in-view to avoid session issues
+spring.jpa.open-in-view=true
+
+# Disable SQL formatting since we're not showing SQL anymore
+spring.jpa.properties.hibernate.format_sql=false
+
+# Change server port to 8090
+server.port=8090
+
+#spring.security.user.name=Meet
+#spring.security.user.password=Meet@123
+#spring.security.user.role=ADMIN
+##Bcryptencoded od "Meet@123"
+#spring.security.user.password=$2a$12$sTONnUwn2kgEWBiPafb5DeKtA89/g4qaNuiN01xZKIDF1yhScv1uK

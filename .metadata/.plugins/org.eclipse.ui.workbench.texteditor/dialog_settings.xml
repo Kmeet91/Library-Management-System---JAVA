@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<item key="hasShownOverlayPopupBefore" value="true"/>
+	<item key="replaceBarOpen" value="true"/>
+	<list key="searchhistory">
+		<item value="Authority"/>
+		<item value="return_Date"/>
+		<item value="borrowed_date"/>
+		<item value="publication_year"/>
+		<item value="updatedBook"/>
+		<item value="old"/>
+		<item value="loginDate"/>
+	</list>
+	<list key="replacehistory">
+		<item value="Role"/>
+		<item value="returnDate"/>
+		<item value="borrowedDate"/>
+		<item value="publicationYear"/>
+		<item value="book"/>
+		<item value="Current"/>
+		<item value="loginDateTime"/>
+	</list>
+</section>

@@ -1,0 +1,65 @@
+package project.library.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import project.library.dao.BookDAO;
+import project.library.entities.Book;
+import project.library.entities.Borrowed_books;
+import project.library.entities.Returned_books;
+import java.util.List;
+
+@Service
+public class BookService {
+
+    @Autowired
+    private BookDAO bookDAO;
+
+    public List<Book> getAllBooks() {
+        return bookDAO.getAllBooks();
+    }
+
+    public Book getBookById(int id) {
+        return bookDAO.getBookById(id);
+    }
+
+    public Book addBook(Book book) {
+        return bookDAO.addBook(book);
+    }
+
+    public Book updateBook(int id, Book book) {
+        return bookDAO.updateBook(id, book);
+    }
+
+    public boolean deleteBook(int id) {
+        return bookDAO.deleteBook(id);
+    }
+
+    public Borrowed_books borrowBook(int bookId, int userId) {
+        return bookDAO.borrowBook(bookId, userId);
+    }
+    
+    public Borrowed_books reneBook(int borrowedBookId,int userId) {
+        return bookDAO.renewBook(borrowedBookId, userId);
+    }
+
+    public Returned_books returnBook(int borrowedBookId) {
+        return bookDAO.returnBook(borrowedBookId);
+    }
+
+    public List<Borrowed_books> getAllBorrowedBooks() {
+        return bookDAO.getAllBorrowedBooks();
+    }
+    
+    
+    public List<Returned_books> getAllReturnedBooks() {
+        return bookDAO.getAllReturnedBooks();
+    }
+    
+    public List<Borrowed_books> getBorrowedBooksByUser(int userId) {
+        return bookDAO.getBorrowedBooksByUser(userId);
+    }
+
+    public List<Returned_books> getReturnedBooksByUser(int userId) {
+        return bookDAO.getReturnedBooksByUser(userId);
+    }
+}

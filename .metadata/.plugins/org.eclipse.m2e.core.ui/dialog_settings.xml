@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="MavenProjectImportWizardPage">
+		<list key="rootDirectory">
+			<item value="C:\Users\meetg\Downloads\todo"/>
+			<item value="C:\Users\meetg\OneDrive\Documents\Visual Studio 2022\SEM - IV\JT\Hibernate_Projects"/>
+			<item value="C:\Users\meetg\OneDrive\Documents\Visual Studio 2022\SEM - IV\JT\05-spring-boot-rest-with-jpa"/>
+			<item value="C:\Users\meetg\OneDrive\Documents\Visual Studio 2022\SEM - IV\JT\10-spring-boot-rest-security-JDBC-Auth-Bcrypt"/>
+			<item value="C:\Users\meetg\OneDrive\Documents\Visual Studio 2022\SEM - IV\JT\09-spring-boot-rest-security-JDBC-Auth"/>
+			<item value="C:\Users\meetg\OneDrive\Documents\Visual Studio 2022\SEM - IV\JT\08-spring-boot-rest-security"/>
+			<item value="C:\Users\meetg\OneDrive\Documents\My Web Sites\Java-project"/>
+		</list>
+		<list key="projectNameTemplate">
+			<item value="JDBC_Auth-Bcrypt"/>
+			<item value="JDBC_Auth"/>
+			<item value="[artifactId]"/>
+			<item value="[artifactId]-TRUNK"/>
+			<item value="[artifactId]-[version]"/>
+			<item value="[groupId].[artifactId]"/>
+			<item value="[groupId].[artifactId]-[version]"/>
+			<item value="[name]"/>
+		</list>
+	</section>
+	<section name="org.eclipse.m2e.core.pom.overview">
+		<list key="ciManagementUrl">
+		</list>
+		<list key="ciManagementSystem">
+		</list>
+		<list key="issueManagementSystem">
+		</list>
+		<list key="issueManagementUrl">
+		</list>
+	</section>
+	<section name="org.eclipse.m2e.core.pom.dependencies">
+	</section>
+</section>

@@ -1,0 +1,186 @@
+package project.library.entities;
+
+import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+@Entity
+@Table(name = "user")
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(unique = true, nullable = false)
+    private String username;
+
+    @Column(nullable = false)
+    private String password;
+
+    private String name;
+    private String email;
+    private String phone;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "login_date")
+    private Date loginDateTime;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "logout_date")
+    private Date logoutDateTime;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Borrowed_books> borrowedBooks;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Returned_books> returnedBooks;
+
+    public enum Role {
+        USER,
+        MANAGER,
+        ADMIN
+    }
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles;
+
+    @Transient // This field is not persisted in the database
+    private PasswordEncoder passwordEncoder = new PasswordEncoder() {
+        @Override
+        public String encode(CharSequence rawPassword) {
+            return rawPassword.toString(); // No encoding
+        }
+
+        @Override
+        public boolean matches(CharSequence rawPassword, String encodedPassword) {
+            return rawPassword.toString().equals(encodedPassword);
+        }
+    };
+    
+	public User() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	public User(int id, String username, String password, String name, String email, String phone, Date loginDateTime,
+			Date logoutDateTime, List<Borrowed_books> borrowedBooks, List<Returned_books> returnedBooks,
+			Set<Role> roles) {
+		super();
+		this.id = id;
+		this.username = username;
+		this.password = passwordEncoder.encode(password);
+		this.name = name;
+		this.email = email;
+		this.phone = phone;
+		this.loginDateTime = loginDateTime;
+		this.logoutDateTime = logoutDateTime;
+		this.borrowedBooks = borrowedBooks;
+		this.returnedBooks = returnedBooks;
+		this.roles = roles;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = passwordEncoder.encode(password);
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public Date getLoginDateTime() {
+		return loginDateTime;
+	}
+
+	public void setLoginDateTime(Date loginDateTime) {
+		this.loginDateTime = loginDateTime;
+	}
+
+	public Date getLogoutDateTime() {
+		return logoutDateTime;
+	}
+
+	public void setLogoutDateTime(Date logoutDateTime) {
+		this.logoutDateTime = logoutDateTime;
+	}
+
+	public List<Borrowed_books> getBorrowedBooks() {
+		return borrowedBooks;
+	}
+
+	public void setBorrowedBooks(List<Borrowed_books> borrowedBooks) {
+		this.borrowedBooks = borrowedBooks;
+	}
+
+	public List<Returned_books> getReturnedBooks() {
+		return returnedBooks;
+	}
+
+	public void setReturnedBooks(List<Returned_books> returnedBooks) {
+		this.returnedBooks = returnedBooks;
+	}
+
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", name=" + name + ", email="
+				+ email + ", phone=" + phone + ", loginDateTime=" + loginDateTime + ", logoutDateTime=" + logoutDateTime
+				+ ", borrowedBooks=" + borrowedBooks + ", returnedBooks=" + returnedBooks + ", roles=" + roles + "]";
+	}
+
+    
+}

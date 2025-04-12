@@ -1,0 +1,129 @@
+package project.library.entities;
+
+import jakarta.persistence.*;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import org.apache.el.parser.ParseException;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+//import project.library.entities.User;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "borrowed_books")
+@JsonInclude(JsonInclude.Include.NON_NULL) // Exclude null values from JSON output
+public class Borrowed_books {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    private String title;
+    private String author;
+//    @Column(name="borrowedDate")
+    @Temporal(TemporalType.DATE)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private LocalDate borrowedDate;
+
+    @Temporal(TemporalType.DATE)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private LocalDate returnDate;
+
+    @ManyToOne
+    @JoinColumn(name = "book_id", nullable = false)
+    @JsonIgnore  // Add this annotation to prevent serialization of the book
+    private Book book;
+    
+    @JsonProperty("bookId")  // This will be included in JSON
+    public Integer getBookId() {
+        return book != null ? book.getId() : null;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
+    @JsonIgnore  // Ignore the entire user object
+    private User user;
+
+    // Add this getter to only expose the user ID
+    @JsonProperty("userId")  // This will be included in JSON
+    public Integer getUserId() {
+        return user != null ? user.getId() : null;
+    }
+
+    // Getters and Setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getborrowedDate() {
+        return borrowedDate != null ? borrowedDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : null;
+    }
+
+    public void setborrowedDate(String date) {
+        this.borrowedDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    }
+
+
+    public String getreturnDate() {
+        return returnDate != null ? returnDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : null;
+    }
+
+    public void setreturnDate(String date) {
+        this.returnDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    }
+
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+	@Override
+	public String toString() {
+		return "Borrowed_books [id=" + id + ", title=" + title + ", author=" + author + ", borrowedDate="
+				+ borrowedDate + ", returnDate=" + returnDate + ", book=" + book + ", user=" + user + "]";
+	}
+    
+    
+}

@@ -1,0 +1,97 @@
+package project.library.config;
+
+import javax.sql.DataSource;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+	
+	@Bean
+    public UserDetailsManager userDetailsManager(DataSource dataSource) { //UserDetailsManager : An extension of the UserDetailsService which provides the ability to create new users and update existing ones.
+        JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
+
+        // define query to retrieve a user by username
+        jdbcUserDetailsManager.setUsersByUsernameQuery(
+                "select username, password from user where id=?");
+
+        // define query to retrieve the authorities/roles by username
+        jdbcUserDetailsManager.setAuthoritiesByUsernameQuery(
+                "select user_id, roles from user_roles where user_id=?");
+
+        return jdbcUserDetailsManager;
+    }	
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for REST API
+            .authorizeHttpRequests(configurer -> configurer
+                // Public endpoints
+//                .requestMatchers(HttpMethod.GET, "/library/books").permitAll()
+//                .requestMatchers(HttpMethod.GET, "/library/book/**").permitAll()
+//                .requestMatchers(HttpMethod.POST, "/library/borrow").authenticated()
+//                .requestMatchers(HttpMethod.POST, "/library/return/**").authenticated()
+//                .requestMatchers(HttpMethod.GET, "/library/borrowed/user/**").authenticated()
+//                .requestMatchers(HttpMethod.GET, "/library/returned/user/**").authenticated()
+//                
+//                // Manager and Admin endpoints
+//                .requestMatchers(HttpMethod.POST, "/library/add").hasAnyRole("MANAGER", "ADMIN")
+//                .requestMatchers(HttpMethod.PUT, "/library/update/**").hasAnyRole("MANAGER", "ADMIN")
+//                .requestMatchers(HttpMethod.GET, "/library/borrowed").hasAnyRole("MANAGER", "ADMIN")
+//                .requestMatchers(HttpMethod.GET, "/library/returned").hasAnyRole("MANAGER", "ADMIN")
+//                .requestMatchers(HttpMethod.GET, "/auth/users").hasAnyRole("MANAGER", "ADMIN")
+//                .requestMatchers(HttpMethod.GET, "/auth/user/**").hasAnyRole("MANAGER", "ADMIN")
+//                .requestMatchers(HttpMethod.POST, "/auth/user").hasAnyRole("MANAGER", "ADMIN")
+//                .requestMatchers(HttpMethod.PUT, "/auth/user/**").hasAnyRole("MANAGER", "ADMIN")
+//                
+//                // Admin-only endpoints
+//                .requestMatchers(HttpMethod.DELETE, "/library/delete/**").hasRole("ADMIN")
+//                .requestMatchers(HttpMethod.DELETE, "/auth/user/**").hasRole("ADMIN")
+//                
+//                // Authentication endpoints
+                .requestMatchers("/auth/login", "/auth/register").permitAll()
+                
+            );
+         // use HTTP Basic authentication
+            http.httpBasic(Customizer.withDefaults());
+
+            // disable Cross Site Request Forgery (CSRF)
+            // in general, not required for stateless REST APIs that use POST, PUT, DELETE and/or PATCH
+            http.csrf(csrf -> csrf.disable());
+            
+            return http.build();
+    }
+
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
+    
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new PasswordEncoder() {
+            @Override
+            public String encode(CharSequence rawPassword) {
+                return rawPassword.toString(); // Plain text storage
+            }
+
+            @Override
+            public boolean matches(CharSequence rawPassword, String encodedPassword) {
+                return rawPassword.toString().equals(encodedPassword);
+            }
+        };
+    }
+}
